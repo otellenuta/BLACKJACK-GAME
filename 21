@@ -1,0 +1,112 @@
+static List<string> ButucDeCarti(string[] numereCarti, string[] semneCarti)
+{
+    List<string> carti = new List<string>();
+    for (int i = 0; i < numereCarti.Length; i++) //2,3,4,5,6,7,8,9,10,J,Q,K,A
+    {
+        for (int j = 0; j < semneCarti.Length; j++)// "♠", "♥", "♦", "♣" 
+        {
+            carti.Add(numereCarti[i] + semneCarti[j]);
+        }
+    }
+    return carti; 
+}
+static int ValoareaCartii(string CarteaOferita) 
+{
+    if (CarteaOferita.StartsWith("J") || CarteaOferita.StartsWith("Q") || CarteaOferita.StartsWith("K"))
+    {
+        return 10;
+    }
+    if(CarteaOferita.StartsWith("A"))
+    {
+        return 11;
+    }
+    
+    for (int i = 2; i <= 10; i++)
+    {
+        if(CarteaOferita.StartsWith(i.ToString()))
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+static string OferaOCarte(List<string> carti) 
+{
+    Random carte = new Random();
+    int indexCarte = carte.Next(carti.Count); 
+    string CarteaOferita = carti[indexCarte]; 
+    carti.RemoveAt(indexCarte); 
+    return CarteaOferita;
+}
+static void AfiseazaCartile(List<string> cartiLaMana) 
+{
+    for (int i = 0; i < cartiLaMana.Count; i++)
+    {
+        Console.Write(cartiLaMana[i] + " ");
+    }
+}
+static int CalculamSumaCartilorDinMana(List<string> cartiLaMana)
+{
+    int suma = 0;
+    for(int i = 0; i < cartiLaMana.Count; i++)
+    {
+        suma = suma + ValoareaCartii(cartiLaMana[i]);
+    }
+    return suma;
+}
+
+string[] numereCarti = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+string[] semneCarti = new string[] { "♠", "♥", "♦", "♣" };
+List<string> carti = ButucDeCarti(numereCarti, semneCarti);
+List<string> cartiLaMana = new List<string>(); 
+cartiLaMana.Add(OferaOCarte(carti));
+cartiLaMana.Add(OferaOCarte(carti));
+int sumaCartilor = CalculamSumaCartilorDinMana(cartiLaMana); 
+{
+int sumaCartilor = CalculamSumaCartilorDinMana(cartiLaMana);
+AfiseazaCartile(cartiLaMana);
+Console.WriteLine();
+Console.WriteLine("Suma primelor 2 carti este: " + sumaCartilor);
+}
+
+int solicitaOCarte = 0; 
+while(CalculamSumaCartilorDinMana(cartiLaMana) < 21) 
+{
+    Console.WriteLine();
+    solicitaOCarte = int.Parse(Console.ReadLine());
+    Console.WriteLine();
+    
+    if (solicitaOCarte > 0 ) 
+    {
+        cartiLaMana.Add(OferaOCarte(carti));    
+        AfiseazaCartile(cartiLaMana); 
+        Console.WriteLine();
+        Console.WriteLine("Suma a " + cartiLaMana.Count + " carti este: " + CalculamSumaCartilorDinMana(cartiLaMana));
+    }
+    else
+    {
+        break; 
+    }
+}
+
+int sumaFinala = CalculamSumaCartilorDinMana(cartiLaMana);
+
+if(sumaFinala == 21 || (sumaFinala == 22 && carti.Count == 2)) 
+{
+    Console.WriteLine("FELICITARI BLACKJACK!!!");
+    return;
+}
+if(sumaFinala > 21)
+{
+    Console.WriteLine("Scorul dumneavoastra este: " + sumaFinala);
+    Console.WriteLine();
+    Console.WriteLine("Cu regret ati piedut!");
+    return;
+}
+if (sumaFinala < 21)
+{
+    Console.WriteLine("Scorul dumneavoastra este: " + sumaFinala);
+    Console.WriteLine();
+    Console.WriteLine("Remisa!");
+    return;
+}
